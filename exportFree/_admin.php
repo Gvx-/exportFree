@@ -8,10 +8,3 @@
 if (!defined('DC_CONTEXT_ADMIN')) { return; }
 
 $core->addBehavior('dcMaintenanceInit', array('exportFree','MaintenanceInit'));
-
-//$core->error->add('test erreur');
-//$core->error->add('test erreur posts','posts');
-//$core->error->add('test erreur comments','comments');
-//$core->error->add('test erreur blogs','blogs');
-//$core->error->add('test erreur users','users');
-//$core->error->add('test erreur pages','pages');
