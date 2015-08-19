@@ -1,7 +1,9 @@
-Ce plugin pour dotclear permet d'exporter la base de données chez l'hebergeur Free.
+# README #
 
+Ce plugin pour [Dotclear](http://fr.dotclear.org/) permet d'exporter la base de données chez l'hebergeur Free.
 
-La version minimum de dotclear requise est 2.7
-
-
+## Caractéristiques ##
 Ce plugin contourne les limitations de l'hebergeur Free pour exporter la base de données.
+
+## Pré-requis ##
+Dotclear 2.7 ou plus
