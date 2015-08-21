@@ -52,7 +52,6 @@ class exportFree {
 			$options['root'] = dirname(__FILE__);
 			if(!is_file($options['root'].'/_define.php')) { $options['root'] = dirname($options['root']); }
 		}
-		echo $options['root'];
 		if(!is_file($options['root'].'/_define.php')) { throw new DomainException(__('Invalid plugin directory')); }
 		$this->plugin_id = basename($options['root']);
 		
