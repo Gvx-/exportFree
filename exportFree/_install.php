@@ -8,4 +8,4 @@
 
 if (!defined('DC_CONTEXT_ADMIN')) { return; }
 
-return $core->exportFree->install('2.7');
+return $core->exportFree->install('2.8');
