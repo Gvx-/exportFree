@@ -2,6 +2,7 @@ Changelog
 =========
 
 Version 0.7.2 (2015-10-04)
+--------------------------
 * corrections mineures
 
 Version 0.7.0 (2015-08-21)
