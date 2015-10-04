@@ -1,14 +1,14 @@
 # Language: Français
-# Module: exportFree - 0.7.0
-# Date: 2015-08-21 14:07:33
+# Module: exportFree - 0.7.1-r0006
+# Date: 2015-10-03 10:32:58
 # Translated with translater 2013.05.11
 
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: exportFree 0.7.0\n"
+"Project-Id-Version: exportFree 0.7.1-r0006\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2015-08-21T14:07:33+00:00\n"
+"PO-Revision-Date: 2015-10-03T10:32:58+00:00\n"
 "Last-Translator: Gilles Grandveaux\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -30,22 +30,34 @@ msgstr "Export pour Free"
 msgid "Export your blog for Free"
 msgstr "Exportez votre blog (Free)"
 
-#: inc/class.export.Free.php:31
-#: inc/class.export.Free.php:34
+#: inc/class.export.Free.php:41
+#: inc/class.export.Free.php:44
 msgid "Enable plugin"
 msgstr "Activer le plugin"
 
-#: inc/class.export.Free.php:56
+#: inc/class.export.Free.php:60
 msgid "Invalid plugin directory"
 msgstr "Repertoire de plugin incorrect"
 
-#: inc/class.export.Free.php:86
+#: inc/class.export.Free.php:92
 msgid "%s require Dotclear version %s or more."
 msgstr "%s necessite Dotclear version %s ou plus"
 
-#: inc/class.export.Free.php:146
+#: inc/class.export.Free.php:102
+msgid "[Plugin %s] Unknown error in installation."
+msgstr "Erreur inconnue lors de l'installation de %s"
+
+#: inc/class.export.Free.php:155
 msgid "icon plugin"
 msgstr "Icone"
+
+#: inc/class.export.Free.php:156
+msgid "Settings"
+msgstr "Paramètres"
+
+#: inc/class.export.Free.php:159
+msgid "Author(s)"
+msgstr "Auteur(s)"
 
 #: inc/lib.export.Free.maintenance.php:22
 #: inc/lib.export.Free.maintenance.php:63

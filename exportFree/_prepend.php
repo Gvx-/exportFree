@@ -9,8 +9,8 @@ if (!defined('DC_RC_PATH')) { return; }
 
 if (!defined('DC_CONTEXT_ADMIN')) { return; }
 
-$__autoload['exportFree'] = 	dirname(__FILE__).'/inc/class.export.Free.php';
-$__autoload['dcExportFlatFree'] = 	dirname(__FILE__).'/inc/class.dc.export.flat.Free.php';
+$__autoload['exportFree'] = dirname(__FILE__).'/inc/class.export.Free.php';
+$__autoload['dcExportFlatFree'] = dirname(__FILE__).'/inc/class.dc.export.flat.Free.php';
 $__autoload['FreeMaintenanceExportblog'] = dirname(__FILE__).'/inc/lib.export.Free.maintenance.php';
 $__autoload['FreeMaintenanceExportfull'] = dirname(__FILE__).'/inc/lib.export.Free.maintenance.php';
 
@@ -25,4 +25,4 @@ try {
 	$core->error->add($e->getMessage());
 }
 
-$core->addBehavior('importExportModules',array('exportFree','registerModules'));
+$core->addBehavior('importExportModules',array('exportFree','ieRegisterModules'));
