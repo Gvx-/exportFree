@@ -1,6 +1,10 @@
 Changelog
 =========
 
+Version 0.7.3 (2015-10-06)
+--------------------------
+* ajout d'un lien de support
+
 Version 0.7.2 (2015-10-04)
 --------------------------
 * corrections mineures
