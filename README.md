@@ -15,7 +15,7 @@ Le principe de contournement ne permet pas de compresser le fichier.
 Le plugin ajoute 2 nouvelles options dans l'onglet **Sauvegarde** du plugin **Maintenance**:
 
 * Une option pour la sauvegarde du blog courant.
-* Une option pour la sauvegarde des la base de données complète. (super administrateur seulement)
+* Une option pour la sauvegarde de la base de données complète. (super administrateur seulement)
 
 ## Téléchargements ##
 Vous pouvez télécharger les packages [ici](https://bitbucket.org/Gvx_/dotclear-plugin-export-pour-free/downloads)
