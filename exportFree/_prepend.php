@@ -15,14 +15,12 @@ $__autoload['FreeMaintenanceExportblog'] = dirname(__FILE__).'/inc/lib.export.Fr
 $__autoload['FreeMaintenanceExportfull'] = dirname(__FILE__).'/inc/lib.export.Free.maintenance.php';
 
 # initialisation
-try {
-	if(!isset($core->exportFree)) {
-		$core->exportFree = new exportFree();
-	} else {
-		throw new LogicException(sprintf(__('Conflict: dcCore or other plugin, and %s plugin.'), basename(dirname(__FILE__))));
-	}
-} catch(Exception $e) {
-	$core->error->add($e->getMessage());
-}
+exportFree::init(array(
+	'perm'		=> 'admin',								# permissions acces page administration
+	'icons'		=> array(								# icones pour menu & tableau de bord
+		'small' => '/inc/icon-small.png',
+		'large' => '/inc/icon-large.png'
+	)
+));
 
 $core->addBehavior('importExportModules',array('exportFree','ieRegisterModules'));

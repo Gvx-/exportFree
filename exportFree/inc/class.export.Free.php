@@ -25,7 +25,7 @@ class exportFree {
 
 	/*---------------------------------------------------------------------------
 	 * Helper for dotclear version 2.7 and more
-	 * Version : 0.19.0
+	 * Version : 0.19.2
 	 * Copyright © 2008-2015 Gvx
 	 * Licensed under the GPL version 2.0 license.
 	 * (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
@@ -50,6 +50,19 @@ class exportFree {
 	public $admin_url;					// admin url plugin
 	protected $options = array();		// options plugin
 
+	public static function init($options=array(), $instanceName=__CLASS__) {
+		global $core;
+		try {
+			if(!isset($core->{$instanceName})) {
+				$core->{$instanceName} = new self($options);
+			} else {
+				throw new LogicException(sprintf(__('Conflict: dcCore or other plugin, and %s plugin.'), $instanceName));
+			}
+		} catch(Exception $e) {
+			$core->error->add($e->getMessage());
+		}
+	}
+
 	public function __construct($options=array()) {
 		global $core;
 		# check plugin_id and admin url
@@ -65,8 +78,8 @@ class exportFree {
 		if(!is_array($options)) { $options = array(); }
 		$options['icons'] = array_merge(
 			array(
-				'small' => '/inc/small-icon.png',
-				'large' => '/inc/large-icon.png'
+				'small' => '/inc/icon-small.png',
+				'large' => '/inc/icon-large.png'
 			),
 			(array_key_exists('icons', $options) && is_array($options['icons']) ? $options['icons'] : array())
 		);
