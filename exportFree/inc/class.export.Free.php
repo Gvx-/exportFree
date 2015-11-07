@@ -24,30 +24,28 @@ class exportFree {
 	}
 
 	/*---------------------------------------------------------------------------
-	 * Helper for dotclear version 2.7 and more
-	 * Version : 0.19.2
+	 * Helper for dotclear version 2.8 and more
+	 * Version : 0.20.8
 	 * Copyright © 2008-2015 Gvx
 	 * Licensed under the GPL version 2.0 license.
 	 * (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
 	 *-------------------------------------------------------------------------*/
-	 
+
 	/* --== SPECIFIQUE FUNCTIONS ==-- */
 
 	protected function setDefaultSettings() {
-		global $core;
-		if(!defined('DC_CONTEXT_ADMIN')) { return; }
 		# config plugin (TODO: specific settings)
-		//$core->blog->settings->addNamespace($this->plugin_id);
-		//$core->blog->settings->$this->plugin_id->put('enabled',false,'boolean',__('Enable plugin'),false,true);
+		//$this->core->blog->settings->addNamespace($this->plugin_id);
+		//$this->core->blog->settings->{$this->plugin_id}->put('enabled', false, 'boolean', __('Enable plugin'), false, true);
 		# user config plugin (TODO: specific settings)
-		//$core->auth->user_prefs->addWorkSpace($this->plugin_id);
-		//$core->auth->user_prefs->$this->plugin_id->put('enabled',false,'boolean',__('Enable plugin'),false,true);
+		//$this->core->auth->user_prefs->addWorkSpace($this->plugin_id);
+		//$this->core->auth->user_prefs->$this->plugin_id->put('enabled', false, 'boolean', __('Enable plugin'), false, true);
 	}
-	
+
 	/* --== STANDARD FUNCTIONS ==-- */
 
-	public $plugin_id;					// ID plugin
-	public $admin_url;					// admin url plugin
+	protected $plugin_id;				// ID plugin
+	protected $admin_url;				// admin url plugin
 	protected $options = array();		// options plugin
 
 	public static function init($options=array(), $instanceName=__CLASS__) {
@@ -65,6 +63,7 @@ class exportFree {
 
 	public function __construct($options=array()) {
 		global $core;
+		$this->core = &$core;
 		# check plugin_id and admin url
 		if(!array_key_exists('root', $options) || !is_file($options['root'].'/_define.php')) {
 			$options['root'] = dirname(__FILE__);
@@ -72,8 +71,8 @@ class exportFree {
 		}
 		if(!is_file($options['root'].'/_define.php')) { throw new DomainException(__('Invalid plugin directory')); }
 		$this->plugin_id = basename($options['root']);
-		$this->admin_url = defined('DC_CONTEXT_ADMIN') ? 'admin.plugin.'.$this->plugin_id : '';
-		
+		$this->admin_url = 'admin.plugin.'.$this->plugin_id;
+
 		# default options
 		if(!is_array($options)) { $options = array(); }
 		$options['icons'] = array_merge(
@@ -96,48 +95,52 @@ class exportFree {
 
 	public function install($dcMinVer=null) {
 		if(!defined('DC_CONTEXT_ADMIN')) { return; }
-		global $core;
 		try {
 			# check DC version
 			if(!empty($dcMinVer) && is_string($dcMinVer)) {
 				if (version_compare(DC_VERSION, $dcMinVer, '<')) {
-					$core->plugins->deactivateModule($this->plugin_id);
-					throw new Exception(sprintf(__('%s require Dotclear version %s or more.'), $core->plugins->moduleInfo($this->plugin_id, 'name'), $dcMinVer));
+					$this->core->plugins->deactivateModule($this->plugin_id);
+					throw new Exception(sprintf(__('%s require Dotclear version %s or more.'), $this->core->plugins->moduleInfo($this->plugin_id, 'name'), $dcMinVer));
 				}
 			}
 			# check plugin versions
-			$new_version = $core->plugins->moduleInfo($this->plugin_id, 'version');
-			$old_version = $core->getVersion($this->plugin_id);
+			$new_version = $this->core->plugins->moduleInfo($this->plugin_id, 'version');
+			$old_version = $this->core->getVersion($this->plugin_id);
 			if (version_compare($old_version, $new_version, '>=')) { return; }
-
-			# --BEHAVIOR-- pluginInstallActions
-			if($core->callBehavior('pluginInstallActions', $this->plugin_id) === false) {
-				throw new Exception(sprintf(__('[Plugin %s] Unknown error in installation.'), $core->plugins->moduleInfo($this->plugin_id, 'name')));
-			}
 
 			# default settings
 			if(is_callable(array($this, 'setDefaultSettings'))) { $this->setDefaultSettings(); }
-			$core->setVersion($this->plugin_id, $new_version);
+
+			# --BEHAVIOR-- pluginInstallActions
+			if($this->core->callBehavior('pluginInstallActions', $this->plugin_id, $old_version) === false) {
+				throw new Exception(sprintf(__('[Plugin %s] Unknown error in installation.'), $this->core->plugins->moduleInfo($this->plugin_id, 'name')));
+			}
+
+			$this->core->setVersion($this->plugin_id, $new_version);
 			return true;
 		} catch (Exception $e) {
-			$core->error->add($e->getMessage());
+			$this->core->error->add($e->getMessage());
 		}
 		return false;
 	}
 
 	public function adminMenu($menu='Plugins') {
 		if(!defined('DC_CONTEXT_ADMIN')) { return; }
-		global $core, $_menu;
-		$_menu[$menu]->addItem(
-			html::escapeHTML(__($core->plugins->moduleInfo($this->plugin_id,'name'))),		// Item menu
-			$core->adminurl->get($this->admin_url),											// Page admin url
-			dcPage::getPF($this->plugin_id.$this->options['icons']['small']),				// Icon menu
-			preg_match(																																		// Pattern url
-				'/'.$core->adminurl->get($this->admin_url).'(&.*)?$/',
-				$_SERVER['REQUEST_URI']
-			),
-			$core->auth->check($this->options['perm'], $core->blog->id)						// Permissions minimum
-		);
+		global $_menu;
+		if(array_key_exists($menu, $_menu)) {
+			$_menu[$menu]->addItem(
+				html::escapeHTML(__($this->core->plugins->moduleInfo($this->plugin_id,'name'))),		// Item menu
+				$this->core->adminurl->get($this->admin_url),											// Page admin url
+				dcPage::getPF($this->plugin_id.$this->options['icons']['small']),						// Icon menu
+				preg_match(																																		// Pattern url
+					'/'.$this->core->adminurl->get($this->admin_url).'(&.*)?$/',
+					$_SERVER['REQUEST_URI']
+				),
+				$this->core->auth->check($this->options['perm'], $this->core->blog->id)					// Permissions minimum
+			);
+		} else {
+			throw new ErrorException(sprinf(__('%s menu not present.'), $menu), 0, E_USER_NOTICE, __FILE__, __LINE__);
+		}
 	}
 
 	public function adminDashboardFavs($core, $favs) {
@@ -153,23 +156,20 @@ class exportFree {
 
 	public function adminBaseline($items=array()) {
 		if(!defined('DC_CONTEXT_ADMIN')) { return; }
-		global $core;
-		if(empty($items)) { $items = array( $core->plugins->moduleInfo($this->plugin_id,'name') => ''); }
-		return dcPage::breadcrumb(array_merge(array(html::escapeHTML($core->blog->name) => ''),$items)).dcPage::notices()."\n";
+		if(empty($items)) { $items = array( $this->core->plugins->moduleInfo($this->plugin_id,'name') => ''); }
+		return dcPage::breadcrumb(array_merge(array(html::escapeHTML($this->core->blog->name) => ''),$items)).dcPage::notices()."\n";
 	}
 
 	public function adminFooterInfo() {
 		if(!defined('DC_CONTEXT_ADMIN')) { return; }
-		global $core;
-		$support = $core->plugins->moduleInfo($this->plugin_id, 'support');
-		$details = $core->plugins->moduleInfo($this->plugin_id, 'details');
-		$config = is_file(path::real($core->plugins->moduleInfo($this->plugin_id, 'root').'/_config.php')) ? $core->adminurl->get('admin.plugins', array('module' => $this->plugin_id,'conf' => 1, 'redir' => $core->adminurl->get($this->admin_url))) : null;
+		$support = $this->core->plugins->moduleInfo($this->plugin_id, 'support');
+		$details = $this->core->plugins->moduleInfo($this->plugin_id, 'details');
 		return '<p class="right">
 					<img style="vertical-align: middle;" src="'.dcPage::getPF($this->plugin_id.$this->options['icons']['small']).'" alt="'.__('icon plugin').'"/>&nbsp;&nbsp;'.
-					($config ? '<a href="'.$config.'">'.__('Settings').'</a>&nbsp;-&nbsp;' : '').
-					html::escapeHTML($core->plugins->moduleInfo($this->plugin_id, 'name')).'&nbsp;'.
-					__('Version').'&nbsp;:&nbsp;'.html::escapeHTML($core->plugins->moduleInfo($this->plugin_id, 'version')).'&nbsp;-&nbsp;'.
-					__('Author(s)').'&nbsp;:&nbsp;'.html::escapeHTML($core->plugins->moduleInfo($this->plugin_id, 'author')).
+					$this->configLink(__('Settings'), $this->admin_url).
+					html::escapeHTML($this->core->plugins->moduleInfo($this->plugin_id, 'name')).'&nbsp;'.
+					__('Version').'&nbsp;:&nbsp;'.html::escapeHTML($this->core->plugins->moduleInfo($this->plugin_id, 'version')).'&nbsp;-&nbsp;'.
+					__('Author(s)').'&nbsp;:&nbsp;'.html::escapeHTML($this->core->plugins->moduleInfo($this->plugin_id, 'author')).
 					($details ? '&nbsp;-&nbsp;<a href="'.$details.'">'.__('Details').'</a>' : '').
 					($support ? '&nbsp;-&nbsp;<a href="'.$support.'">'.__('Support').'</a>' : '').'
 				</p>
@@ -177,20 +177,76 @@ class exportFree {
 	}
 
 	public function settings($key, $value=null, $global=false) {
-		global $core;
 		if(is_null($value)) {
-			return $core->blog->settings->{$this->plugin_id}->$key;
+			return $this->core->blog->settings->{$this->plugin_id}->$key;
 		} else {
-			$core->blog->settings->{$this->plugin_id}->put($key, $value, null, null, true, $global);
+			$this->core->blog->settings->{$this->plugin_id}->put($key, $value, null, null, true, $global);
 		}
 	}
 
 	public function userSettings($key, $value=null, $global=false) {
-		global $core;
 		if(is_null($value)) {
-			return $core->auth->user_prefs->{$this->plugin_id}->$key;
+			return $this->core->auth->user_prefs->{$this->plugin_id}->$key;
 		} else {
-			$core->auth->user_prefs->{$this->plugin_id}->put($key,$value, null, null, true, $global);
+			$this->core->auth->user_prefs->{$this->plugin_id}->put($key,$value, null, null, true, $global);
+		}
+	}
+
+	public function info($item=null) {
+		if(empty($item) || $item == 'id') {
+			return $this->plugin_id;
+		} elseif($item == 'adminUrl') {
+			return (defined('DC_CONTEXT_ADMIN') ? $this->admin_url : null);
+		} else {
+			return $this->core->plugins->moduleInfo($this->plugin_id, $item);
+		}
+	}
+
+	public function jsLoad($src) {
+		$file = $this->plugin_id.'/'.ltrim($src, '/');
+		$version = $this->core->plugins->moduleInfo($this->plugin_id, 'version');
+		if(defined('DC_CONTEXT_ADMIN')) {
+			return dcPage::jsLoad(dcPage::getPF($file), $version);
+		} else {
+			if(version_compare(DC_VERSION, '2.9', '<')) {
+				$file = html::escapeHTML($file).(strpos($file,'?') === false ? '?' : '&amp;').'v='.$version;
+				return '<script type="text/javascript" src="'.$this->core->blog->getQmarkURL().'pf='.$file.'"></script>'."\n";
+			} else {
+				return dcUtils::jsLoad($this->core->blog->getPF($file), $version);
+			}
+		}
+	}
+
+	public function cssLoad($src, $media='screen') {
+		$file = $this->plugin_id.'/'.ltrim($src, '/');
+		$version = $this->core->plugins->moduleInfo($this->plugin_id, 'version');
+		if(defined('DC_CONTEXT_ADMIN')) {
+			return dcPage::cssLoad(dcPage::getPF($file), $media, $version);
+		} else {
+			if(version_compare(DC_VERSION, '2.9', '<')) {
+				$file = html::escapeHTML($file).(strpos($file,'?') === false ? '?' : '&amp;').'v='.$version;
+				return '<link rel="stylesheet" href="'.$this->core->blog->getQmarkURL().'pf='.$file.'" type="text/css" media="'.$media.'" />'."\n";
+			} else {
+				return dcUtils::cssLoad($this->core->blog->getPF($file), $media, $version);
+			}
+		}
+	}
+
+	public function checkConfig() {
+		if(!defined('DC_CONTEXT_ADMIN')) { return; }
+		if(is_file(path::real($this->core->plugins->moduleInfo($this->plugin_id, 'root').'/_config.php'))) {
+			return $this->core->auth->isSuperAdmin() || $this->settings('enabled');
+		} else {
+			return true;
+		}
+	}
+
+	public function configLink($label, $redir=null) {
+		if(!defined('DC_CONTEXT_ADMIN')) { return; }
+		if($this->core->auth->isSuperAdmin() && is_file(path::real($this->core->plugins->moduleInfo($this->plugin_id, 'root').'/_config.php'))) {
+			$redir = $this->core->adminurl->get(empty($redir) ? $this->admin_url : $redir);
+			$href = $this->core->adminurl->get('admin.plugins', array('module' => $this->plugin_id,'conf' => 1, 'redir' => $redir));
+			return '<a href="'.$href.'">'.$label.'</a>&nbsp;-&nbsp;';
 		}
 	}
 	
