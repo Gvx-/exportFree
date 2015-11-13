@@ -25,7 +25,7 @@ class exportFree {
 
 	/*---------------------------------------------------------------------------
 	 * Helper for dotclear version 2.8 and more
-	 * Version : 0.20.8
+	 * Version : 0.20.10
 	 * Copyright © 2008-2015 Gvx
 	 * Licensed under the GPL version 2.0 license.
 	 * (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
@@ -48,8 +48,10 @@ class exportFree {
 	protected $admin_url;				// admin url plugin
 	protected $options = array();		// options plugin
 
-	public static function init($options=array(), $instanceName=__CLASS__) {
+	public static function init($options=array()) {
 		global $core;
+		$instanceName = __CLASS__;
+		//$instanceName = get_called_class();		// for the future (abstract class)
 		try {
 			if(!isset($core->{$instanceName})) {
 				$core->{$instanceName} = new self($options);
@@ -60,17 +62,22 @@ class exportFree {
 			$core->error->add($e->getMessage());
 		}
 	}
-
+	
 	public function __construct($options=array()) {
 		global $core;
 		$this->core = &$core;
 		# check plugin_id and admin url
-		if(!array_key_exists('root', $options) || !is_file($options['root'].'/_define.php')) {
-			$options['root'] = dirname(__FILE__);
-			if(!is_file($options['root'].'/_define.php')) { $options['root'] = dirname($options['root']); }
+		$plugin = realpath(dirname(__FILE__));
+		foreach(array_map('realpath', array_reverse(explode(PATH_SEPARATOR, DC_PLUGINS_ROOT))) as $path) {
+			if(strpos($plugin, $path) === 0) {
+				$id = explode(DIRECTORY_SEPARATOR, trim(str_replace($path, '', $plugin), DIRECTORY_SEPARATOR));
+				if(is_file($path.DIRECTORY_SEPARATOR.$id[0].DIRECTORY_SEPARATOR.'_define.php')) {
+					$this->plugin_id = $id[0];
+					break;
+				}
+			}
 		}
-		if(!is_file($options['root'].'/_define.php')) { throw new DomainException(__('Invalid plugin directory')); }
-		$this->plugin_id = basename($options['root']);
+		if(empty($this->plugin_id)) { throw new DomainException(__('Invalid plugin directory')); }
 		$this->admin_url = 'admin.plugin.'.$this->plugin_id;
 
 		# default options

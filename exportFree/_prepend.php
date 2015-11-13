@@ -7,6 +7,17 @@
  * -- END LICENSE BLOCK -----------------------------------------------------*/
 if (!defined('DC_RC_PATH')) { return; }
 
+# check PHP version
+if(version_compare(PHP_VERSION, '5.2', '<')) {
+	$_id = basename(dirname(__FILE__));
+	if(defined('DC_CONTEXT_ADMIN')) {
+		dcPage::addErrorNotice(sprintf(__('%1$s require PHP version %2$s. (your PHP version is %3$s)'), $_id, '5.2', PHP_VERSION));
+	}
+	$core->plugins->deactivateModule($_id);
+	unset($_id);
+	return;
+}
+
 if (!defined('DC_CONTEXT_ADMIN')) { return; }
 
 $__autoload['exportFree'] = dirname(__FILE__).'/inc/class.export.Free.php';
