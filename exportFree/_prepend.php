@@ -1,7 +1,7 @@
 <?php
 /* -- BEGIN LICENSE BLOCK -----------------------------------------------------
  * This file is part of plugin exportFree for Dotclear 2.
- * Copyright © 2015 Gvx
+ * Copyright © 2015-2016 Gvx
  * Licensed under the GPL version 2.0 license.
  * (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
  * -- END LICENSE BLOCK -----------------------------------------------------*/
@@ -12,7 +12,7 @@ if(defined('DC_CONTEXT_ADMIN')) {
 	# admin only
 
 	# loading of plugin class
-	$__autoload['dcPluginHelper023'] = dirname(__FILE__).'/inc/class.dcPluginHelper.php';
+	$__autoload['dcPluginHelper024'] = dirname(__FILE__).'/inc/class.dcPluginHelper.php';
 	$__autoload['exportFree'] = dirname(__FILE__).'/inc/class.export.Free.php';
 	$__autoload['dcExportFlatFree'] = dirname(__FILE__).'/inc/class.dc.export.flat.Free.php';
 	$__autoload['FreeMaintenanceExportblog'] = dirname(__FILE__).'/inc/lib.export.Free.maintenance.php';

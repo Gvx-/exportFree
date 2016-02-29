@@ -1,22 +1,53 @@
 # Language: Français
-# Module: exportFree - 0.7.4-r0005
-# Date: 2015-11-13 08:42:04
+# Module: exportFree - 0.7.4-r0018
+# Date: 2016-02-28 14:09:25
 # Translated with translater 2013.05.11
 
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: exportFree 0.7.4-r0005\n"
+"Project-Id-Version: exportFree 0.7.4-r0018\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2015-11-13T08:42:04+00:00\n"
-"Last-Translator: Gilles Grandveaux\n"
+"PO-Revision-Date: 2016-02-28T14:09:25+00:00\n"
+"Last-Translator: Gvx\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: _prepend.php:14
+#: inc/_class.dcPluginHelper.php:23
+#: inc/_class.dcPluginHelper.php:26
+#: inc/class.dcPluginHelper.php:23
+#: inc/class.dcPluginHelper.php:26
+msgid "Enable plugin"
+msgstr "Activer le plugin"
+
+#: inc/_class.dcPluginHelper.php:79
+msgid "%s require Dotclear version %s or more."
+msgstr "%s necessite Dotclear version %s ou plus"
+
+#: inc/_class.dcPluginHelper.php:87
 msgid "%1$s require PHP version %2$s. (your PHP version is %3$s)"
 msgstr "%1$s necessite PHP version %2$s (votre version est %3$s)"
+
+#: inc/_class.dcPluginHelper.php:159
+#: inc/class.dcPluginHelper.php:145
+msgid "%s menu not present."
+msgstr "le menu %s est absent"
+
+#: inc/_class.dcPluginHelper.php:185
+#: inc/class.dcPluginHelper.php:171
+msgid "icon plugin"
+msgstr "Icone"
+
+#: inc/_class.dcPluginHelper.php:186
+#: inc/class.dcPluginHelper.php:172
+msgid "Settings"
+msgstr "Paramètres"
+
+#: inc/_class.dcPluginHelper.php:189
+#: inc/class.dcPluginHelper.php:175
+msgid "Author(s)"
+msgstr "Auteur(s)"
 
 #: inc/class.dc.export.flat.Free.php:16
 msgid "Flat file export for Free"
@@ -30,43 +61,6 @@ msgstr "Export pour Free"
 msgid "Export your blog for Free"
 msgstr "Exportez votre blog (Free)"
 
-#: inc/class.export.Free.php:39
-#: inc/class.export.Free.php:42
-msgid "Enable plugin"
-msgstr "Activer le plugin"
-
-#: inc/class.export.Free.php:59
-msgid "Conflict: dcCore or other plugin, and %s plugin."
-msgstr "Conflit entre dcCore ou un autre plugin et %s"
-
-#: inc/class.export.Free.php:80
-msgid "Invalid plugin directory"
-msgstr "Repertoire de plugin incorrect"
-
-#: inc/class.export.Free.php:110
-msgid "%s require Dotclear version %s or more."
-msgstr "%s necessite Dotclear version %s ou plus"
-
-#: inc/class.export.Free.php:123
-msgid "[Plugin %s] Unknown error in installation."
-msgstr "Erreur inconnue lors de l'installation de %s"
-
-#: inc/class.export.Free.php:149
-msgid "%s menu not present."
-msgstr "le menu %s est absent"
-
-#: inc/class.export.Free.php:175
-msgid "icon plugin"
-msgstr "Icone"
-
-#: inc/class.export.Free.php:176
-msgid "Settings"
-msgstr "Paramètres"
-
-#: inc/class.export.Free.php:179
-msgid "Author(s)"
-msgstr "Auteur(s)"
-
 #: inc/lib.export.Free.maintenance.php:22
 #: inc/lib.export.Free.maintenance.php:63
 msgid "Database export for Free website"
@@ -79,4 +73,7 @@ msgstr "Télécharger les contenus et réglages du blog courant (Free)"
 #: inc/lib.export.Free.maintenance.php:64
 msgid "Download database of all blogs for Free website"
 msgstr "Télécharger les contenus et réglages de tous les blogs (Free)"
+
+msgid "Conflict: dcCore or other plugin, and %s plugin."
+msgstr "Conflit entre dcCore ou un autre plugin et %s"
 
