@@ -11,14 +11,14 @@ $this->registerModule(
 	/* Name */			'Export Free',
 	/* Description*/	'Export your blog for Free',
 	/* Author */		'Gvx, Olivier Meunier & Contributors',
-	/* Version */		'0.7.4-r0018',
+	/* Version */		'0.7.4-r0019',
 	array(
 		/* standard plugin options dotclear */
 		'permissions'				=>	'admin'
 		, 'type'					=>	'plugin'
 		, 'Priority'				=>	1010
 		, 'support'		/* url */	=>	'http://forum.dotclear.org/viewtopic.php?id=48599'
-		, 'details' 	/* url */	=>	'https://bitbucket.org/Gvx_/dotclear-plugin-export-pour-free'
+		, 'details' 	/* url */	=>	'https://github.com/Gvx-/exportFree'
 		, 'requires'	/* id(s) */	=>	array(
 			array('core', '2.8')
 			, 'importExport'
