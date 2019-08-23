@@ -18,10 +18,10 @@ Le plugin ajoute 2 nouvelles options dans l'onglet **Sauvegarde** du plugin **Ma
 * Une option pour la sauvegarde de la base de données complète. (super administrateur seulement)
 
 ## Téléchargements ##
-Vous pouvez télécharger les packages [ici](https://bitbucket.org/Gvx_/dotclear-plugin-export-pour-free/downloads)
+Vous pouvez télécharger les packages [ici](https://github.com/Gvx-/exportFree/releases)
 
 ## Signaler un dysfonctionnement ##
-Vous pouvez signaler un dysfonctionnement ou faire une demande d’amélioration [ici](https://bitbucket.org/Gvx_/dotclear-plugin-export-pour-free/issues/new)
+Vous pouvez signaler un dysfonctionnement ou faire une demande d’amélioration [ici](https://github.com/Gvx-/exportFree/issues/new)
 
 ## Licence ##
 Ce code est sous licence [GPL version 2.0](http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
