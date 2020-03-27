@@ -1,6 +1,11 @@
 Changelog
 =========
 
+Version 0.7.5 (2020-03-xx)
+--------------------------
+
+* Correction procédure désinstallation
+
 Version 0.7.4 (2020-02-21)
 --------------------------
 
