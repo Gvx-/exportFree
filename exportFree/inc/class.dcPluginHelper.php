@@ -11,8 +11,10 @@ if(!defined('DC_RC_PATH')) { return; }
 if (!defined('NL')) { define('NL', "\n"); }    // New Line
 
 abstract class dcPluginHelper024 {
-	
+
 	### Constants ###
+	const VERSION = '2.4.0.10';
+
 	const DC_SHARED_DIR = '_shared';
 
 	### Specific functions to overload ###
@@ -31,7 +33,7 @@ abstract class dcPluginHelper024 {
 	protected function installActions($old_version) {
 		# upgrade previous versions
 		if(!empty($old_version)) {
-			
+
 		}
 		$this->debugDisplay('Not install actions for this plugin.');
 	}
@@ -55,10 +57,10 @@ abstract class dcPluginHelper024 {
 	public function __construct($id) {
 		global $core;
 		$this->core = &$core;
-		
+
 		# Check/set shared directory
 		//self::getSharedDir();
-		
+
 		# set plugin id and admin url
 		$this->plugin_id = $id;
 		$this->admin_url = 'admin.plugin.'.$this->plugin_id;
@@ -77,7 +79,7 @@ abstract class dcPluginHelper024 {
 
 		# uninstall plugin procedure
 		if($this->core->auth->isSuperAdmin()) { $this->core->addBehavior('pluginBeforeDelete', array($this, 'uninstall')); }
-		
+
 		# debug
 		//$this->debugDisplay('Debug mode actived for this plugin');
 	}
@@ -105,16 +107,18 @@ abstract class dcPluginHelper024 {
 		return false;
 	}
 
-	public final function uninstall() {
+	public final function uninstall($plugin) {
 		if(!defined('DC_CONTEXT_ADMIN')) { return; }
-		# specifics uninstall actions
-		$this->uninstallActions();
-		# delete all users prefs
-		$this->core->auth->user_prefs->delWorkSpace($this->plugin_id);
-		# delete all blogs settings
-		$this->core->blog->settings->delNamespace($this->plugin_id);
-		# delete version
-		$this->core->delVersion($this->plugin_id);
+		if($plugin['id'] == $this->plugin_id) {
+			# specifics uninstall actions
+			$this->uninstallActions();
+			# delete all users prefs
+			$this->core->auth->user_prefs->delWorkSpace($this->plugin_id);
+			# delete all blogs settings
+			$this->core->blog->settings->delNamespace($this->plugin_id);
+			# delete version
+			$this->core->delVersion($this->plugin_id);
+		}
 	}
 
 	public final function configLink($label, $redir=null, $prefix='', $suffix='') {
@@ -206,9 +210,9 @@ abstract class dcPluginHelper024 {
 		$content = ($w->title ? $w->renderTitle(html::escapeHTML($w->title)) : '').$content;
 		return $w->renderDiv($w->content_only, $w->class,'',$content);
 	}
-	
+
 	### Common functions ###
-	
+
 	public static function getSharedDir($dir='') {
 		$dir = trim($dir, '\\/');
 		$dc_shared = DC_TPL_CACHE.'/'.self::DC_SHARED_DIR;
@@ -219,7 +223,7 @@ abstract class dcPluginHelper024 {
 		}
 		return $shared;
 	}
-	
+
 	public final function settings($key, $value=null, $global=false) {
 		if(is_null($value)) {
 			try {
@@ -300,7 +304,7 @@ abstract class dcPluginHelper024 {
 	}
 
 	### debug functions ###
-	
+
 	protected final function debugDisplay($msg) {
 		if($this->debug_mode && !empty($msg)) {
 			if(!defined('DC_CONTEXT_ADMIN')) { dcPage::addWarningNotice(':: [DEBUG] :: ['.$this->plugin_id.']<br />'.$msg); }
