@@ -1,10 +1,14 @@
 <?php
-/* -- BEGIN LICENSE BLOCK -----------------------------------------------------
- * This file is part of plugin exportFree for Dotclear 2.
- * Copyright © 2015-2016 Gvx
- * Licensed under the GPL version 2.0 license.
- * (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
- * -- END LICENSE BLOCK -----------------------------------------------------*/
+/**
+  * This file is part of exportFree plugin for Dotclear 2.
+  *
+  * @package Dotclear\plungin\exportFree
+  *
+  * @author Gvx <g.gvx@free.fr>
+  * @copyright © 2015-2020 Gvx
+  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ */
+
 if(!defined('DC_CONTEXT_ADMIN')) { return; }
 
-$core->addBehavior('dcMaintenanceInit', array('exportFree','MaintenanceInit'));
+$core->exportFree->_admin();

@@ -11,4 +11,4 @@
 
 if(!defined('DC_CONTEXT_ADMIN')) { return; }
 
-return $core->exportFree->_install();
+$core->exportFree->_config();

@@ -1,36 +1,50 @@
 <?php
-/* -- BEGIN LICENSE BLOCK -----------------------------------------------------
- * This file is part of plugin exportFree for Dotclear 2.
- * Copyright © 2015-2016 Gvx
- * Copyright (c) 2003-2012 Olivier Meunier & Association Dotclear
- * Licensed under the GPL version 2.0 license.
- * (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
- * -- END LICENSE BLOCK -----------------------------------------------------*/
+/**
+  * This file is part of exportFree plugin for Dotclear 2.
+  *
+  * @package Dotclear\plungin\exportFree
+  *
+  * @author Gvx <g.gvx@free.fr>
+  * @copyright © 2003-2012 Olivier Meunier & Association Dotclear
+  * @copyright © 2015-2020 Gvx
+  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ */
+
 if (!defined('DC_CONTEXT_ADMIN')) { return; }
 
-class dcExportFlatFree extends dcIeModule
-{
-	public function setInfo()
-	{
+class dcExportFlatFree extends dcIeModule {
+	# Functionnal modes
+	const modeDirect		= 1;
+	const modeIndirect		= 2;
+	const modeMultiFiles	= 3;
+
+	# Export type
+	const typeFull		= 'full';
+	const typeSingle	= 'single';
+
+	public function setInfo() {
 		$this->type = 'export';
 		$this->name = __('Flat file export for Free');
 		$this->description = __('Exports a blog or a full Dotclear installation to flat file.');
 	}
 
-	public function process($do)
-	{
+	public function process($do) {
 		# Export a blog
-		if ($do == 'export_blog' && $this->core->auth->check('admin',$this->core->blog->id))
-		{
-			$fullname = 'php://output';
+		if ($do == 'export_blog' && $this->core->auth->check('admin',$this->core->blog->id)) {
+
 			$blog_id = $this->core->con->escape($this->core->blog->id);
 
-			try
-			{
+			try {
 				ob_start();
 
-				$exp = new flatExport($this->core->con,$fullname,$this->core->prefix);
-				fwrite($exp->fp,'///DOTCLEAR|'.DC_VERSION."|single\n");
+				if($this->core->exportFree->settings('mode') == self::modeDirect) {
+					$fullname = 'php://output';
+					$exp = new flatExport($this->core->con,$fullname,$this->core->prefix);
+					fwrite($exp->fp,'///DOTCLEAR|'.DC_VERSION.'|'.self::$typeSingle."\n");
+				} else {
+					$fullname = $this->core->blog->public_path.'/'.$this->core->exportFree->settings('directory').'/'.$_POST['file_name'];
+					$exp = new flatExportExtend($this->core->con, $fullname, $this->core->prefix, self::typeSingle);
+				}
 
 				$exp->export('category',
 					'SELECT * FROM '.$this->core->prefix.'category '.
@@ -80,26 +94,55 @@ class dcExportFlatFree extends dcIeModule
 				# --BEHAVIOR-- exportSingle
 				$this->core->callBehavior('exportSingle',$this->core,$exp,$blog_id);
 
-				header('Content-Disposition: attachment;filename='.$_POST['file_name']);
-				header('Content-Type: text/plain; charset=UTF-8');
-				ob_end_flush();
-				exit;
-			}
-			catch (Exception $e)
-			{
+				if($this->core->exportFree->settings('mode') == self::modeDirect) {
+					header('Content-Disposition: attachment;filename='.$_POST['file_name']);
+					header('Content-Type: text/plain; charset=UTF-8');
+					ob_end_flush();
+					exit;
+				} elseif($this->core->exportFree->settings('mode') == self::modeIndirect) {
+					$_SESSION['dcExport'] = array(
+						'directory'		=> $fullname
+						, 'filesCount'	=> $exp->getFilesCount()
+						, 'fileBase'	=> $this->core->exportFree->settings('filePrefix')
+						, 'filename'	=> $_POST['file_name']
+						, 'fileZip'		=> !empty($_POST['file_zip'])
+						, 'deleteFiles' => !empty($_POST['deleteFiles'])
+					);
+					http::redirect($this->getURL().'&do=ok');
+				} elseif($this->core->exportFree->settings('mode') == self::modeMultiFiles) {
+					$_SESSION['dcExport'] = array(
+						'directory'		=> $fullname
+						, 'filesCount'	=> $exp->getFilesCount()
+						, 'fileBase'	=> $this->core->exportFree->settings('filePrefix')
+						, 'filename'	=> $_POST['file_name']
+						, 'fileZip'		=> !empty($_POST['file_zip'])
+						, 'deleteFiles' => !empty($_POST['deleteFiles'])
+					);
+					http::redirect($this->getURL().'&do=ok');
+				} else {
+					// unknown mode
+				}
+			} catch (Exception $e) {
+				files::deltree($fullname);
 				throw $e;
 			}
 		}
 
 		# Export all content
-		if ($do == 'export_all' && $this->core->auth->isSuperAdmin())
-		{
-			$fullname = 'php://output';
-			try
-			{
+		if ($do == 'export_all' && $this->core->auth->isSuperAdmin()) {
+
+			try {
 				ob_start();
-				$exp = new flatExport($this->core->con,$fullname,$this->core->prefix);
-				fwrite($exp->fp,'///DOTCLEAR|'.DC_VERSION."|full\n");
+
+				if($this->core->exportFree->settings('mode') == self::modeDirect) {
+					$fullname = 'php://output';
+					$exp = new flatExport($this->core->con,$fullname,$this->core->prefix);
+					fwrite($exp->fp,'///DOTCLEAR|'.DC_VERSION.'|'.self::$typeFull."\n");
+				} else {
+					$fullname = $this->core->blog->public_path.'/'.$this->core->exportFree->settings('directory').'/'.$_POST['file_name'];
+					$exp = new flatExportExtend($this->core->con, $fullname, $this->core->prefix, self::typeFull);
+				}
+
 				$exp->exportTable('blog');
 				$exp->exportTable('category');
 				$exp->exportTable('link');
@@ -119,21 +162,98 @@ class dcExportFlatFree extends dcIeModule
 
 				# --BEHAVIOR-- exportFull
 				$this->core->callBehavior('exportFull',$this->core,$exp);
-			
-				header('Content-Disposition: attachment;filename='.$_POST['file_name']);
-				header('Content-Type: text/plain; charset=UTF-8');
-				ob_end_flush();
-				exit;
-			}
-			catch (Exception $e)
-			{
+
+				if($this->core->exportFree->settings('mode') == self::modeDirect) {
+					header('Content-Disposition: attachment;filename='.$_POST['file_name']);
+					header('Content-Type: text/plain; charset=UTF-8');
+					ob_end_flush();
+					exit;
+				} elseif($this->core->exportFree->settings('mode') == self::modeIndirect) {
+					$_SESSION['dcExport'] = array(
+						'directory'		=> $fullname
+						, 'filesCount'	=> $exp->getFilesCount()
+						, 'fileBase'	=> $this->core->exportFree->settings('filePrefix')
+						, 'filename'	=> $_POST['file_name']
+						, 'fileZip'		=> !empty($_POST['file_zip'])
+						, 'deleteFiles' => !empty($_POST['deleteFiles'])
+					);
+					http::redirect($this->getURL().'&do=ok');
+				} elseif($this->core->exportFree->settings('mode') == self::modeMultiFiles) {
+					$_SESSION['dcExport'] = array(
+						'directory'		=> $fullname
+						, 'filesCount'	=> $exp->getFilesCount()
+						, 'fileBase'	=> $this->core->exportFree->settings('filePrefix')
+						, 'filename'	=> $_POST['file_name']
+						, 'fileZip'		=> !empty($_POST['file_zip'])
+						, 'deleteFiles' => !empty($_POST['deleteFiles'])
+					);
+					http::redirect($this->getURL().'&do=ok');
+				} else {
+					// unknown mode
+				}
+			} catch (Exception $e) {
 				throw $e;
 			}
 		}
 
+		# Send file content
+		if ($do == 'ok') {
+			if (!file_exists($_SESSION['dcExport']['directory'])) {
+				throw new Exception(__('Export file not found.'));
+			}
+
+			ob_end_clean();
+
+			if (substr($_SESSION['dcExport']['filename'],-4) == '.zip') {
+				$_SESSION['dcExport']['filename'] = substr($_SESSION['dcExport']['filename'],0,-4);//.'.txt';
+			}
+
+			if (empty($_SESSION['dcExport']['fileZip'])) {
+				# Flat export
+
+				header('Content-Disposition: attachment;filename='.$_SESSION['dcExport']['filename']);
+				header('Content-Type: text/plain; charset=UTF-8');
+				$filebase = $_SESSION['dcExport']['directory'].'/'.$_SESSION['dcExport']['fileBase'];
+				for($i = 0; $i <= $_SESSION['dcExport']['filesCount']; $i++) {
+					readfile(flatExportExtend::getFilename($i, $filebase));
+				}
+
+			} else {
+				# Zip export
+				try {
+					$file_zipname = $_SESSION['dcExport']['filename'].'.zip';
+
+					$fp = fopen('php://output','wb');
+					$zip = new fileZip($fp);
+					if($this->core->exportFree->settings('mode') == self::modeIndirect) {
+						$zip->addDirectory($_SESSION['dcExport']['directory'], $_SESSION['dcExport']['filename'], true);
+					}elseif($this->core->exportFree->settings('mode') == self::modeMultiFiles) {
+						$zip->addDirectory($_SESSION['dcExport']['directory'], $_SESSION['dcExport']['filename'], true);
+					}
+
+					header('Content-Disposition: attachment;filename='.$file_zipname);
+					header('Content-Type: application/x-zip');
+
+					$zip->write();
+
+				} catch (Exception $e) {
+					if($_SESSION['dcExport']['deleteFiles']) {
+						files::deltree($_SESSION['dcExport']['directory']);
+					}
+					unset($_SESSION['dcExport']);
+					throw new Exception(__('Failed to compress export file.'));
+				}
+			}
+			if($_SESSION['dcExport']['deleteFiles']) {
+				files::deltree($_SESSION['dcExport']['directory']);
+			}
+			unset($_SESSION['dcExport']);
+			exit;
+		}
+
 	}
 
-	public function gui()
-	{
+	public function gui() {
+
 	}
 }

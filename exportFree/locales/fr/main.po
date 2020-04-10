@@ -1,79 +1,215 @@
 # Language: Français
-# Module: exportFree - 0.7.4-r0018
-# Date: 2016-02-28 14:09:25
-# Translated with translater 2013.05.11
+# Module: exportFree - 0.9.0-dev-r0075
+# Date: 2020-04-10 05:08:14
+# Translated with translater 2020.04.09
 
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: exportFree 0.7.4-r0018\n"
+"Project-Id-Version: exportFree 0.9.0-dev-r0075\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-02-28T14:09:25+00:00\n"
-"Last-Translator: Gvx\n"
+"PO-Revision-Date: 2020-04-10T05:08:14+00:00\n"
+"Last-Translator: Gvx Gilles\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: inc/_class.dcPluginHelper.php:23
-#: inc/_class.dcPluginHelper.php:26
-#: inc/class.dcPluginHelper.php:23
-#: inc/class.dcPluginHelper.php:26
-msgid "Enable plugin"
-msgstr "Activer le plugin"
-
-#: inc/_class.dcPluginHelper.php:79
-msgid "%s require Dotclear version %s or more."
-msgstr "%s necessite Dotclear version %s ou plus"
-
-#: inc/_class.dcPluginHelper.php:87
-msgid "%1$s require PHP version %2$s. (your PHP version is %3$s)"
-msgstr "%1$s necessite PHP version %2$s (votre version est %3$s)"
-
-#: inc/_class.dcPluginHelper.php:159
-#: inc/class.dcPluginHelper.php:145
-msgid "%s menu not present."
-msgstr "le menu %s est absent"
-
-#: inc/_class.dcPluginHelper.php:185
-#: inc/class.dcPluginHelper.php:171
-msgid "icon plugin"
-msgstr "Icone"
-
-#: inc/_class.dcPluginHelper.php:186
-#: inc/class.dcPluginHelper.php:172
-msgid "Settings"
-msgstr "Paramètres"
-
-#: inc/_class.dcPluginHelper.php:189
-#: inc/class.dcPluginHelper.php:175
-msgid "Author(s)"
-msgstr "Auteur(s)"
-
-#: inc/class.dc.export.flat.Free.php:16
+#: inc/class.dc.export.flat.Free.php:27
 msgid "Flat file export for Free"
 msgstr "Export \"a plat\" pour Free"
 
-#: inc/class.export.Free.php:10
+#: inc/class.dc.import.flat.Free.php:20
+msgid "Import Flat files folder"
+msgstr "Importer un dossier de fichiers a plat"
+
+#: inc/class.dc.import.flat.Free.php:21
+msgid "Import a blog or a full install Dotclear from a flat files folder."
+msgstr "Importer un blog ou une installation complete depuis un dossier de fichiers a plat"
+
+#: inc/class.dc.import.flat.Free.php:134
+msgid "No backup directory found."
+msgstr "Ld dossier de sauvegarde n'a pas été trouvé"
+
+#: inc/class.dcPluginHelper.php:85
+#: inc/class.exportFree.php:77
+msgid "Unable to save the configuration"
+msgstr "Impossible de sauver la configuration"
+
+#: inc/class.dcPluginHelper.php:88
+#: inc/class.exportFree.php:80
+msgid "Redirection not found"
+msgstr "Redirection introuvable"
+
+#: inc/class.dcPluginHelper.php:112
+msgid "%s plugin is not configured."
+msgstr "Le plugin %s n'est pas configuré"
+
+#: inc/class.dcPluginHelper.php:122
+msgid "Unable to save the code"
+msgstr "Impossible de sauver le code"
+
+#: inc/class.dcPluginHelper.php:332
+msgid "Scope"
+msgstr "Domaine d'application"
+
+#: inc/class.dcPluginHelper.php:334
+msgid "Go"
+msgstr "Aller"
+
+#: inc/class.dcPluginHelper.php:336
+msgid "Select the blog in which parameters apply"
+msgstr "Sélectionnez le blog auquel s'applique les paramètres"
+
+#: inc/class.dcPluginHelper.php:337
+msgid "Update global options"
+msgstr "Mise à jour des options globales"
+
+#: inc/class.dcPluginHelper.php:349
+msgid "Enable %s on this blog"
+msgstr "Activer %s pour ce blog"
+
+#: inc/class.dcPluginHelper.php:351
+msgid "Enable the plugin on this blog."
+msgstr "Activer le plugin pour ce blog"
+
+#: inc/class.dcPluginHelper.php:381
+msgid "%s menu not present."
+msgstr "le menu %s est absent"
+
+#: inc/class.dcPluginHelper.php:425
+msgid "icon plugin"
+msgstr "Icone"
+
+#: inc/class.dcPluginHelper.php:428
+msgid "Author(s)"
+msgstr "Auteur(s)"
+
+#: inc/class.dcPluginHelper.php:657
+msgid "The folder is not in the var directory"
+msgstr "Le dossier ne se trouve pas dans le répertoire VAR"
+
+#: inc/class.dcPluginHelper.php:661
+msgid "Creating a var directory failed"
+msgstr "La creation du répertoire VAR a échoué"
+
+#: inc/class.exportFree.php:16
 msgid "Export Free"
 msgstr "Export pour Free"
 
-#: inc/class.export.Free.php:11
-msgid "Export your blog for Free"
-msgstr "Exportez votre blog (Free)"
+#: inc/class.exportFree.php:17
+msgid "Export your blog host at Free"
+msgstr "Exportez de votre blog hébergé chez Free"
 
-#: inc/lib.export.Free.maintenance.php:22
-#: inc/lib.export.Free.maintenance.php:63
+#: inc/class.exportFree.php:54
+#: inc/class.exportFree.php:94
+msgid "Functional mode"
+msgstr "Mode fe fonctionnement"
+
+#: inc/class.exportFree.php:55
+msgid "Directory backup"
+msgstr "Dossier de sauvegarde"
+
+#: inc/class.exportFree.php:56
+msgid "Prefix for temporary files"
+msgstr "Préfix pour les fichiers temporaires"
+
+#: inc/class.exportFree.php:57
+msgid "Max files size (in bytes)"
+msgstr "Taille max des fichiers (en octets)"
+
+#: inc/class.exportFree.php:58
+#: inc/lib.export.Free.maintenance.php:59
+#: inc/lib.export.Free.maintenance.php:114
+msgid "Delete temporary files"
+msgstr "Effacer les fichiers temporaires"
+
+#: inc/class.exportFree.php:59
+msgid "Task time increase"
+msgstr "Augmentation du temps de tâche"
+
+#: inc/class.exportFree.php:86
+msgid "Direct mode"
+msgstr "Mode direct"
+
+#: inc/class.exportFree.php:87
+msgid "Multiple files to concatenate"
+msgstr "Plusieurs fichiers à concaténer"
+
+#: inc/class.exportFree.php:88
+msgid "Multiple independent files"
+msgstr "Plusieurs fichiers indépendants"
+
+#: inc/class.exportFree.php:95
+msgid "Define operating mode."
+msgstr "Définissez le mode de fonctionnement."
+
+#: inc/class.exportFree.php:96
+msgid "Backup directory"
+msgstr "Dossier de sauvegarde"
+
+#: inc/class.exportFree.php:97
+msgid "Select backup directory in public directory."
+msgstr "Sélectionnez le répertoire de sauvegarde dans le répertoire public."
+
+#: inc/class.exportFree.php:98
+msgid "Filename prefix"
+msgstr "Préfix de fichier"
+
+#: inc/class.exportFree.php:99
+msgid "Define prefix of filenames."
+msgstr "Définissez le préfixe des noms de fichiers."
+
+#: inc/class.exportFree.php:100
+msgid "File size"
+msgstr "Taille de fichier"
+
+#: inc/class.exportFree.php:101
+msgid "Define maximal files size (in bytes). - Less than or equal to zero: unlimited"
+msgstr "Définissez la taille maximale des fichiers (en octets). - Inférieur ou égal à zéro: illimité"
+
+#: inc/class.exportFree.php:102
+msgid "Delete files in server"
+msgstr "Effacer les fichiers du serveur"
+
+#: inc/class.exportFree.php:103
+msgid "Delete files in directory backup."
+msgstr "Effacer les fichiers du dossier de sauvegarde"
+
+#: inc/class.flat.export.extend.php:26
+msgid "Export directory not defined."
+msgstr "Le dossier d'export n'est pas defini"
+
+#: inc/class.flat.export.extend.php:32
+msgid "Export directory not create."
+msgstr "Le dossier d'export n'est pas crée"
+
+#: inc/class.flat.export.extend.php:71
+msgid "Export file not create."
+msgstr "Le fichier d'export n'est pas crée"
+
+#: inc/class.flat.import.extend.php:33
+msgid "No backup directory selected"
+msgstr "Pas de dossier de sauvegarde selectionné"
+
+#: inc/class.flat.import.extend.php:36
+msgid "Backup file is unreadable"
+msgstr "Le fichier de sauvegarde n'est pas lisible"
+
+#: inc/lib.export.Free.maintenance.php:24
+#: inc/lib.export.Free.maintenance.php:79
 msgid "Database export for Free website"
 msgstr "Exporter la base de données (Free)"
 
-#: inc/lib.export.Free.maintenance.php:23
+#: inc/lib.export.Free.maintenance.php:25
 msgid "Download database of current blog for Free website"
 msgstr "Télécharger les contenus et réglages du blog courant (Free)"
 
-#: inc/lib.export.Free.maintenance.php:64
+#: inc/lib.export.Free.maintenance.php:56
+#: inc/lib.export.Free.maintenance.php:111
+msgid "Directory name:"
+msgstr "Nom du dossier"
+
+#: inc/lib.export.Free.maintenance.php:80
 msgid "Download database of all blogs for Free website"
 msgstr "Télécharger les contenus et réglages de tous les blogs (Free)"
-
-msgid "Conflict: dcCore or other plugin, and %s plugin."
-msgstr "Conflit entre dcCore ou un autre plugin et %s"
 
