@@ -15,7 +15,7 @@ $this->registerModule(
 	/* Name */			'Export Free',
 	/* Description*/	'Export your blog host at Free',
 	/* Author */		'Gvx, Olivier Meunier & Contributors',
-	/* Version */		'0.9.0-dev-r0076',
+	/* Version */		'0.9.0-dev-r0077',
 	array(
 		/* standard plugin options dotclear */
 		'permissions'				=>	'admin',

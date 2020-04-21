@@ -24,7 +24,7 @@ if(!function_exists('getInstance')) {										# get class instance in $core
 abstract class dcPluginHelper216 {
 
 	/** @var string version  */
-	const VERSION = '2020.04.08';											# class version
+	const VERSION = '2020.04.17';											# class version
 
 	/**
 	 * setDefaultSettings
@@ -133,6 +133,7 @@ abstract class dcPluginHelper216 {
 	 * @return void
 	 */
 	protected function _prepend() {
+		global $__autoload;
 		# common (public & admin)
 
 		if(defined('DC_CONTEXT_ADMIN')) {
@@ -156,6 +157,8 @@ abstract class dcPluginHelper216 {
 	public function _admin() {
 		if(!defined('DC_CONTEXT_ADMIN')) { return; }
 
+		# debug mode
+		$this->debugDisplay('Not _admin actions for this plugin.');
 	}
 
 	/**
@@ -177,7 +180,31 @@ abstract class dcPluginHelper216 {
 	 * @return void
 	 */
 	public function _xmlrpc() {
+		if(!defined('DC_CONTEXT_ADMIN')) { return; }
 
+		# debug mode
+		$this->debugDisplay('Not _xmlrpc actions for this plugin.');
+	}
+
+	/**
+	 * resources
+	 *
+	 * @todo overloaded
+	 *
+	 * @param  string $path
+	 * @return void
+	 */
+	public function resources($path) {
+		if(!defined('DC_CONTEXT_ADMIN')) { return; }
+		global $__resources;
+		/*
+		if(!isset($__resources['help']['dcScript-config'])) { $__resources['help']['dcScript-config'] = $path.'/help/config.html'; }
+		if(!isset($__resources['help']['dcScript-edit'])) { $__resources['help']['dcScript-edit'] = $path.'/help/edit.html'; }
+		if(!isset($__resources['help']['dcScript-warning'])) { $__resources['help']['dcScript-warning'] = $path.'/help/warning.html'; }
+		*/
+
+		# debug mode
+		$this->debugDisplay('Not resources actions for this plugin.');
 	}
 
 	### Standard functions ###
@@ -209,7 +236,7 @@ abstract class dcPluginHelper216 {
 		$this->admin_url = 'admin.plugin.'.$this->plugin_id;
 
 		# set debug mode
-		$debug_options = dirname(__FILE__).'/../.debug.php';
+		$debug_options = path::real($this->info('root').'/.debug.php');
 		if(is_file($debug_options)) { require_once($debug_options); }
 
 		# start logfile
@@ -326,18 +353,17 @@ abstract class dcPluginHelper216 {
 	 * @return string
 	 */
 	protected function configBaseline($scope=null, $activate=true) {
+		$html = '';
 		if($this->core->auth->isSuperAdmin()) {
 			if(empty($scope)) { $scope = $this->configScope(); }
-			$html =	'<p class="anchor-nav">
+			$html .=	'<p class="anchor-nav">
 						<label class="classic">'.__('Scope').'&nbsp;:&nbsp;
-							'.form::combo('scope', array(__('Global settings') => 'global', sprintf(__('Settings for %s'), html::escapeHTML($this->core->blog->name)) => 'default'), $scope).'
+							'.form::combo('scope', array(__('Global settings') => 'global', sprintf(__('Settings for %s'), html::escapeHTML($this->core->blog->name)) => 'default'), 'default').'
 							<input id="scope_go" name="scope_go" type="submit" value="'.__('Go').'" />
 						</label>
 						&nbsp;&nbsp;<span class="form-note">'.__('Select the blog in which parameters apply').'</span>
 						'.($scope == 'global' ? '&nbsp;&nbsp;<span class="warning">'.__('Update global options').'</span': '').'
 					</p>';
-		} else {
-			$html = '';
 		}
 		if($activate) {
 			$html .= '
@@ -514,17 +540,24 @@ abstract class dcPluginHelper216 {
 		if(is_null($value)) {
 			try {
 				if($scope == 'global' || $scope === true) {
-					return $this->core->blog->settings->{$this->plugin_id}->getGlobal($key);
+					$value = $this->core->blog->settings->{$this->plugin_id}->getGlobal($key);
+					$v = json_decode($value, true);
+					return is_array($v) ? $v : $value;
 				} elseif($scope == 'local') {
-					return $this->core->blog->settings->{$this->plugin_id}->getLocal($key);
+					$value = $this->core->blog->settings->{$this->plugin_id}->getLocal($key);
+					$v = json_decode($value, true);
+					return is_array($v) ? $v : $value;
 				}
-				return $this->core->blog->settings->{$this->plugin_id}->$key;
+				$value = $this->core->blog->settings->{$this->plugin_id}->$key;
+				$v = json_decode($value, true);
+				return is_array($v) ? $v : $value;
 			} catch(Exception $e) {
 				$this->debugDisplay('Blog settings read error.('.$key.')');
 				return null;
 			}
 		} else {
 			try {
+				if(is_array($value) || is_object($value)) { $value = json_encode($value); }
 				$global = ($scope == 'global' || $scope === true);
 				$this->core->blog->settings->{$this->plugin_id}->put($key, $value, null, null, true, $global);
 			} catch(Exception $e) {
@@ -548,17 +581,24 @@ abstract class dcPluginHelper216 {
 		if(is_null($value)) {
 			try {
 				if($scope == 'global' || $scope === true) {
-					return $this->core->auth->user_prefs->{$this->plugin_id}->getGlobal($key);
+					$value = $this->core->auth->user_prefs->{$this->plugin_id}->getGlobal($key);
+					$v = json_decode($value, true);
+					return is_array($v) ? $v : $value;
 				} elseif($scope == 'local') {
-					return $this->core->auth->user_prefs->{$this->plugin_id}->getLocal($key);
+					$value = $this->core->auth->user_prefs->{$this->plugin_id}->getLocal($key);
+					$v = json_decode($value, true);
+					return is_array($v) ? $v : $value;
 				}
-				return $this->core->auth->user_prefs->{$this->plugin_id}->$key;
+				$value = $this->core->auth->user_prefs->{$this->plugin_id}->$key;
+				$v = json_decode($value, true);
+				return is_array($v) ? $v : $value;
 			} catch(Exception $e) {
 				$this->debugDisplay('User settings read error.('.$key.')');
 				return null;
 			}
 		} else {
 			try {
+				if(is_array($value) || is_object($value)) { $value = json_encode($value); }
 				$global = ($scope == 'global' || $scope === true);
 				$this->core->auth->user_prefs->{$this->plugin_id}->put($key,$value, null, null, true, $global);
 			} catch(Exception $e) {
@@ -686,12 +726,14 @@ abstract class dcPluginHelper216 {
 	 * @return string
 	 */
 	protected final function jsLoad($src) {
-		$file = $this->plugin_id.'/'.ltrim($src, '/');
-		$version = $this->info('version');
-		if(defined('DC_CONTEXT_ADMIN')) {
-			return dcPage::jsLoad(dcPage::getPF($file), $version);
-		} else {
-			return dcUtils::jsLoad($this->core->blog->getPF($file), $version);
+		if(is_file($this->info('root').'/'.ltrim($src, '/'))) {
+			$file = $this->plugin_id.'/'.ltrim($src, '/');
+			$version = $this->info('version');
+			if(defined('DC_CONTEXT_ADMIN')) {
+				return dcPage::jsLoad(dcPage::getPF($file), $version);
+			} else {
+				return dcUtils::jsLoad($this->core->blog->getPF($file), $version);
+			}
 		}
 	}
 
@@ -705,19 +747,21 @@ abstract class dcPluginHelper216 {
 	 * @return string
 	 */
 	protected final function cssLoad($src, $media='all', $import=false) {
-		$file = $this->plugin_id.'/'.ltrim($src, '/');
-		$version = $this->info('version');
-		if(defined('DC_CONTEXT_ADMIN')) {
-			if($import) {
-				return	'<style type="text/css">@import url('.dcPage::getPF($file).') '.$media.';</style>'.NL;
+		if(is_file($this->info('root').'/'.ltrim($src, '/'))) {
+			$file = $this->plugin_id.'/'.ltrim($src, '/');
+			$version = $this->info('version');
+			if(defined('DC_CONTEXT_ADMIN')) {
+				if($import) {
+					return	'<style type="text/css">@import url('.dcPage::getPF($file).') '.$media.';</style>'.NL;
+				} else {
+					return dcPage::cssLoad(dcPage::getPF($file), $media, $version);
+				}
 			} else {
-				return dcPage::cssLoad(dcPage::getPF($file), $media, $version);
-			}
-		} else {
-			if($import) {
-				return	'<style type="text/css">@import url('.$this->core->blog->getPF($file).') '.$media.';</style>'.NL;
-			} else {
-				return dcUtils::cssLoad($this->core->blog->getPF($file), $media, $version);
+				if($import) {
+					return	'<style type="text/css">@import url('.$this->core->blog->getPF($file).') '.$media.';</style>'.NL;
+				} else {
+					return dcUtils::cssLoad($this->core->blog->getPF($file), $media, $version);
+				}
 			}
 		}
 	}
