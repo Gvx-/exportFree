@@ -24,7 +24,7 @@ if(!function_exists('getInstance')) {										# get class instance in $core
 abstract class dcPluginHelper216 {
 
 	/** @var string version  */
-	const VERSION = '2020.04.17';											# class version
+	const VERSION = '216-r2020.04.25';											# class version
 
 	/**
 	 * setDefaultSettings
@@ -195,7 +195,6 @@ abstract class dcPluginHelper216 {
 	 * @return void
 	 */
 	public function resources($path) {
-		if(!defined('DC_CONTEXT_ADMIN')) { return; }
 		global $__resources;
 		/*
 		if(!isset($__resources['help']['dcScript-config'])) { $__resources['help']['dcScript-config'] = $path.'/help/config.html'; }
@@ -204,7 +203,7 @@ abstract class dcPluginHelper216 {
 		*/
 
 		# debug mode
-		$this->debugDisplay('Not resources actions for this plugin.');
+		$this->debugDisplay('Not resources actions for '.$this->plugin_id.' ('.get_class($this).') plugin.');
 	}
 
 	### Standard functions ###
@@ -242,6 +241,7 @@ abstract class dcPluginHelper216 {
 		# start logfile
 		$this->debugLog('START_DEBUG');
 		$this->debugLog('Version', $this->core->getVersion($this->plugin_id));
+		$this->debugLog('Helper version', self::VERSION);
 		$this->debugLog('Page', $_SERVER['REQUEST_URI']);
 
 		# Set admin context
@@ -444,7 +444,8 @@ abstract class dcPluginHelper216 {
 	 *
 	 * @return string
 	 */
-	protected function adminFooterInfo() {
+	public function adminFooterInfo() {
+		if(!defined('DC_CONTEXT_ADMIN')) { return; }
 		$support = $this->info('support');
 		$details = $this->info('details');
 		return '<p class="right">
@@ -691,7 +692,7 @@ abstract class dcPluginHelper216 {
 	 *
 	 * @return string
 	 */
-	protected static function getVarDir($dir='', $create=false) {
+	public static function getVarDir($dir='', $create=false) {
 		$dir = trim($dir, '\\/');
 		$var_dir = path::real(DC_VAR.(empty($dir) ? '' : '/'.$dir), false);
 		if(strpos($var_dir, path::real(DC_VAR, false)) === false) { $GLOBALS['core']->error->add(__('The folder is not in the var directory')); }
@@ -710,7 +711,7 @@ abstract class dcPluginHelper216 {
 	 *
 	 * @return string
 	 */
-	protected final function getVF($file) {
+	public final function getVF($file) {
 		if(defined('DC_CONTEXT_ADMIN')) {
 			return dcPage::getVF($file);
 		} else {
@@ -725,7 +726,7 @@ abstract class dcPluginHelper216 {
 	 *
 	 * @return string
 	 */
-	protected final function jsLoad($src) {
+	public final function jsLoad($src) {
 		if(is_file($this->info('root').'/'.ltrim($src, '/'))) {
 			$file = $this->plugin_id.'/'.ltrim($src, '/');
 			$version = $this->info('version');
@@ -746,7 +747,7 @@ abstract class dcPluginHelper216 {
 	 *
 	 * @return string
 	 */
-	protected final function cssLoad($src, $media='all', $import=false) {
+	public final function cssLoad($src, $media='all', $import=false) {
 		if(is_file($this->info('root').'/'.ltrim($src, '/'))) {
 			$file = $this->plugin_id.'/'.ltrim($src, '/');
 			$version = $this->info('version');
