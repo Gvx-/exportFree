@@ -7,6 +7,7 @@ Version 0.9.0 (2020-04-xx)
 * Correction procédure désinstallation
 * Mise a jour classdcPluginHelper v216
 * Version mini dc 2.16
+* Sécurité: Mot de passe nécessaire pour exporter (https://git.dotclear.org/dev/dotclear/issues/45)
 
 Version 0.7.4 (2020-02-21)
 --------------------------

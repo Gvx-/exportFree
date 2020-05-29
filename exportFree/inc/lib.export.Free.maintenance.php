@@ -29,9 +29,14 @@ class FreeMaintenanceExportblog extends dcMaintenanceTask {
 	}
 
 	public function execute() {
+		global $core;
 		// Create zip file
 		if (!empty($_POST['file_name'])) {
-			// This process make an http redirect
+			if (empty($_POST['your_pwd']) || !$core->auth->checkPassword($_POST['your_pwd'])) {
+				$this->error = __('Password verification failed');
+				return false;
+			}
+				// This process make an http redirect
 			$ie = new maintenanceDcExportFlatFree($this->core);
 			$ie->setURL($this->id);
 			$ie->process($this->export_type);
@@ -62,6 +67,10 @@ class FreeMaintenanceExportblog extends dcMaintenanceTask {
 			$res .=	'<p class="hidden"><label for="file_zip" class="classic">'.
 						form::checkbox('file_zip', 1, $this->core->exportFree->settings('mode') != dcExportFlatFree::modeDirect).' '.__('Compress file').
 					'</label></p>';
+			$res .=	'<p><label for="your_pwd" class="required">' .
+						'<abbr title="' . __('Required field') . '">*</abbr> ' . __('Your password:') . '</label>' .
+						form::password('your_pwd', 20, 255,	['extra_html'   => 'required placeholder="' . __('Password') . '"', 'autocomplete' => 'current-password']) .
+					'</p>';
 			return $res;
 		}
 	}
@@ -84,9 +93,13 @@ class FreeMaintenanceExportfull extends dcMaintenanceTask
 	}
 
 	public function execute() {
-		// Create zip file
+		global $core;
 		if (!empty($_POST['file_name'])) {
-			// This process make an http redirect
+			if (empty($_POST['your_pwd']) || !$core->auth->checkPassword($_POST['your_pwd'])) {
+				$this->error = __('Password verification failed');
+				return false;
+			}		// Create zip file
+				// This process make an http redirect
 			$ie = new maintenanceDcExportFlatFree($this->core);
 			$ie->setURL($this->id);
 			$ie->process($this->export_type);
@@ -117,7 +130,11 @@ class FreeMaintenanceExportfull extends dcMaintenanceTask
 			$res .=	'<p class="hidden"><label for="file_zip" class="classic">'.
 						form::checkbox('file_zip', 1, $this->core->exportFree->settings('mode') != dcExportFlatFree::modeDirect).' '.__('Compress file').
 					'</label></p>';
-			return $res;
+			$res .=	'<p><label for="your_pwd" class="required">' .
+						'<abbr title="' . __('Required field') . '">*</abbr> ' . __('Your password:') . '</label>' .
+						form::password('your_pwd', 20, 255,	['extra_html'   => 'required placeholder="' . __('Password') . '"', 'autocomplete' => 'current-password']) .
+					'</p>';
+		return $res;
 		}
 	}
 }
